@@ -8,8 +8,14 @@ Vagrant.configure('2') do |config|
     # communicate with the same ssh key
     config.ssh.insert_key = false
 
+    # set default settings
+    config.vm.box = "bento/centos-7"
+    config.vm.provider "virtualbox" do |vb|
+        vb.memory = 1024
+        vb.cpus = 1
+    end
+
     config.vm.define :ansible, primary: true do |machine|
-        machine.vm.box = "bento/centos-7"
         machine.vm.host_name = "ansible.local"
         machine.vm.network "private_network", ip: "192.168.50.10"
 
@@ -28,8 +34,17 @@ Vagrant.configure('2') do |config|
         machine.vm.provision "file", source: "~/.vagrant.d/insecure_private_key", destination: "$HOME/.ssh/id_rsa"
     end
 
+    config.vm.define :node1 do |machine|
+        machine.vm.host_name = "node1.local"
+        machine.vm.network "private_network", ip: "192.168.50.12"
+    end
+
+    config.vm.define :node2 do |machine|
+        machine.vm.host_name = "node2.local"
+        machine.vm.network "private_network", ip: "192.168.50.13"
+    end
+
     config.vm.define :awx, autostart: false do |machine|
-        machine.vm.box = "bento/centos-7"
         machine.vm.host_name = "awx.local"
         machine.vm.network "private_network", ip: "192.168.50.11"
 
