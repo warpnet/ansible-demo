@@ -32,6 +32,11 @@ user@laptop:~/ansible-demo$ vagrant ssh ansible
 | NOTE: All Vagrant commands need to be executed from the root of the ansible-demo directory, where the `Vagrantfile` is. |
 | --- |
 
+### SSH
+Vagrant will insert the default "insecure" key to the machines Ansible and AWX machine. Using this method, those two machines can login via ssh on the nodes to execute actions.
+
+The private key is located in the home folder of the vagrant user (`/home/vagrant/.ssh/id_rsa`). This key can be used to login over ssh on the machines. Make sure that ansible is being executed as the `vagrant` user.
+
 ## AWX
 If you want to test out Ansible AWX you will need to explicity tell Vagrant to start the AWX machine. Make sure you have at least 4GB of memory free on your local machine in order to start AWX. The provisioning of AWX will take 5-15 minutes depending on your hardware and internet connection.
 
@@ -72,7 +77,7 @@ awx | awx.local | 192.168.50.11
 node1 | node1.local | 192.168.50.12
 node2 | node2.local | 192.168.50.13
 
-### SSH
+### Vagrant SSH
 To ssh into one of the three vagrant boxes you can use the vagrant ssh command. First checkout which names the virtual machines have.
 
 ```bash

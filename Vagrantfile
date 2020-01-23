@@ -3,6 +3,11 @@
 
 Vagrant.configure('2') do |config|
 
+    # don't insert automatically generated keys on each host
+    # instead, use the default "insecure" key, so the nodes can
+    # communicate with the same ssh key
+    config.ssh.insert_key = false
+
     config.vm.define :ansible, primary: true do |machine|
         machine.vm.box = "bento/centos-7"
         machine.vm.host_name = "ansible.local"
@@ -15,6 +20,12 @@ Vagrant.configure('2') do |config|
 
         # install ansible
         machine.vm.provision "shell", path: "provision/install_ansible.sh"
+
+        # sync ansible to /home/vagrant/ansible
+        machine.vm.synced_folder "ansible/", "/home/vagrant/ansible"
+
+        # upload vagrant private key to ansible controller
+        machine.vm.provision "file", source: "~/.vagrant.d/insecure_private_key", destination: "$HOME/.ssh/id_rsa"
     end
 
     config.vm.define :awx, autostart: false do |machine|
@@ -27,6 +38,9 @@ Vagrant.configure('2') do |config|
             vb.cpus = 2
         end
 
+        # upload vagrant private key to awx
+        machine.vm.provision "file", source: "~/.vagrant.d/insecure_private_key", destination: "$HOME/.ssh/id_rsa"
+   
         # install ansible and setup prerequisites for AWX
         machine.vm.provision "ansible_local", preserve_order: true do |ansible|
             ansible.playbook = "provision/prerequisites_awx.yml"
