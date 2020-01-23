@@ -1,0 +1,61 @@
+---
+- hosts: awx
+  become: yes
+  become_method: sudo
+  tasks:
+
+  - name: Install Docker CE repo
+    get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+      mode: '0644'
+      owner: root
+      group: root
+  
+  - name: Install Docker CE packages
+    yum:
+      name:
+        - docker-ce 
+        - docker-ce-cli 
+        - containerd.io
+      state: present
+
+  - name: Start Docker service
+    systemd:
+      name: docker
+      state: started
+
+  - name: Add Vagrant user to Docker group
+    user:
+      name: vagrant
+      groups: docker
+      append: yes
+
+  - name: Install docker and docker-compose using pip3
+    pip:
+      name: 
+        - docker
+        - docker-compose
+      executable: pip3
+
+  - name: Install git
+    yum:
+      name: git
+      state: present
+
+  - name: Clone awx from github
+    git:
+      repo: https://github.com/ansible/awx.git
+      dest: /opt/awx/
+      version: "9.1.1"
+
+  - name: Ensure Python3 is being used as Execution
+    lineinfile:
+      path: /opt/awx/installer/inventory
+      regexp: '^localhost ansible_connection=local.*'
+      line: localhost ansible_connection=local ansible_python_interpreter="/usr/bin/env python3"
+
+  - name: Install selinux in pip3
+    pip:
+      name: selinux
+      executable: pip3
