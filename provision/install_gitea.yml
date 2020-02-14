@@ -1,5 +1,5 @@
 ---
-- hosts: gitea
+- hosts: "{{ variable_host | default('gitea') }}"
   become: yes
   become_method: sudo
   gather_facts: True
