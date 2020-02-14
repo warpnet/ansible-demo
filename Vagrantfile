@@ -11,7 +11,7 @@ Vagrant.configure('2') do |config|
     # set default settings
     config.vm.box = "bento/centos-7"
     config.vm.provider "virtualbox" do |vb|
-        vb.memory = 1024
+        vb.memory = 512
         vb.cpus = 1
     end
 
@@ -20,7 +20,6 @@ Vagrant.configure('2') do |config|
         machine.vm.network "private_network", ip: "192.168.50.10"
 
         machine.vm.provider "virtualbox" do |vb|
-            vb.memory = 1024
             vb.cpus = 2
         end
 
@@ -81,7 +80,7 @@ Vagrant.configure('2') do |config|
         machine.vm.network "private_network", ip: "192.168.50.15"
 
         machine.vm.provider "virtualbox" do |vb|
-            vb.memory = 2048
+            vb.memory = 1024
             vb.cpus = 1
         end
    
