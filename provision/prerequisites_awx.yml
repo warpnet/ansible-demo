@@ -1,5 +1,5 @@
 ---
-- hosts: awx
+- hosts: "{{ variable_host | default('awx') }}"
   become: yes
   become_method: sudo
   tasks:
