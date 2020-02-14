@@ -86,6 +86,39 @@ To SSH into the machine:
 vagrant ssh awx
 ```
 
+## Gitea
+AWX requires to sync projects using git. If you don't want to use Github or have access to a Git server, you can use the gitea instance included in this Vagrantfile. The installation of this box requires at least 2GB of free memory. Installation will take around 5 minutes depending on your internet connection.
+
+```bash
+vagrant up gitea
+```
+
+After the provisioning is done you will be provided with the information to access Gitea. You can access Gitea using your web browser on your local machine using the information provided.
+
+```
+[...]
+TASK [Display Gitea access information] ****************************************
+ok: [gitea] => {
+    "msg": [
+        "Gitea installation done!",
+        "Access Gitea using the following url: http://192.168.50.15",
+        " ",
+        "You will need to click on `register`",
+        "Click install Gitea button, there is no need to make changes",
+        "Create your account!"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+gitea                      : ok=16   changed=13   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+
+To SSH into the machine:
+
+```bash
+vagrant ssh gitea
+```
+
 ## Overview
 This section provides additional information of the Vagrant setup
 
@@ -98,6 +131,8 @@ ansible | ansible.local | 192.168.50.10
 awx | awx.local | 192.168.50.11
 node1 | node1.local | 192.168.50.12
 node2 | node2.local | 192.168.50.13
+node3 | node3.local | 192.168.50.14
+gitea | gitea.local | 192.168.50.15
 
 ### Vagrant SSH
 To ssh into one of the three vagrant boxes you can use the vagrant ssh command. First checkout which names the virtual machines have.
@@ -109,6 +144,7 @@ Current machine states:
 ansible                   running (virtualbox)
 node1                     running (virtualbox)
 node2                     running (virtualbox)
+node3                     running (virtualbox)
 awx                       not created (virtualbox)
 
 This environment represents multiple VMs. The VMs are all listed
@@ -126,6 +162,12 @@ To ssh into Ansible AWX:
 
 ```bash
 vagrant ssh awx
+```
+
+To ssh into gitea:
+
+```bash
+vagrant ssh gitea
 ```
 
 To ssh into one of the nodes:
