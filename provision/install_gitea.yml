@@ -3,133 +3,140 @@
   become: yes
   become_method: sudo
   gather_facts: True
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   tasks:
 
-  - name: Install Docker CE repo
-    get_url:
-      url: https://download.docker.com/linux/centos/docker-ce.repo
-      dest: /etc/yum.repos.d/docker-ce.repo
-      mode: '0644'
-      owner: root
-      group: root
-  
-  - name: Install Docker CE packages
-    yum:
-      name:
-        - docker-ce 
-        - docker-ce-cli 
-        - containerd.io
-      state: present
-    vars:
-      ansible_python_interpreter: /usr/bin/python2.7
+    - name: Install selinux in pip3
+      pip:
+        name: selinux
+        executable: pip3
 
-  - name: Start Docker service
-    systemd:
-      name: docker
-      state: started
+    - name: Install Docker CE repo
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+        mode: '0644'
+        owner: root
+        group: root
+    
+    - name: Install Docker CE packages
+      yum:
+        name:
+          - docker-ce 
+          - docker-ce-cli 
+          - containerd.io
+        state: present
+      vars:
+        ansible_python_interpreter: /usr/bin/python2.7
 
-  - name: Add Vagrant user to Docker group
-    user:
-      name: vagrant
-      groups: docker
-      append: yes
+    - name: Start Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+        
+    - name: Add Vagrant user to Docker group
+      user:
+        name: vagrant
+        groups: docker
+        append: yes
 
-  - name: Install docker and docker-compose using pip3
-    pip:
-      name: 
-        - docker
-        - docker-compose
-      executable: pip3
+    - name: Install docker and docker-compose using pip3
+      pip:
+        name: 
+          - docker
+          - docker-compose
+        executable: pip3
 
-  - name: Create Gitea system group
-    group:
-      name: gitea
-      state: present
-      system: yes
+    - name: Create Gitea system group
+      group:
+        name: gitea
+        state: present
+        system: yes
 
-  - name: Create Gitea system user
-    user:
-      name: gitea
-      groups: gitea,docker
-      append: yes
-      system: yes
+    - name: Create Gitea system user
+      user:
+        name: gitea
+        groups: gitea,docker
+        append: yes
+        system: yes
 
-  - name: Create Gitea directory
-    file:
-      path: /srv/gitea
-      state: directory
-      owner: gitea
-      group: gitea
-      mode: '0755'
+    - name: Create Gitea directory
+      file:
+        path: /srv/gitea
+        state: directory
+        owner: gitea
+        group: gitea
+        mode: '0755'
 
-  - name: Create Gitea data directory
-    file:
-      path: /srv/gitea/data
-      state: directory
+    - name: Create Gitea data directory
+      file:
+        path: /srv/gitea/data
+        state: directory
 
-  - name: Create Gitea postgres directory
-    file:
-      path: /srv/gitea/postgres
-      state: directory
+    - name: Create Gitea postgres directory
+      file:
+        path: /srv/gitea/postgres
+        state: directory
 
-  - name: Place Gitea Docker-Compose file
-    copy:
-      dest: /srv/gitea/docker-compose.yml
-      owner: gitea
-      group: gitea
-      mode: '0644'
-      content: |
-        version: "2"
+    - name: Place Gitea Docker-Compose file
+      copy:
+        dest: /srv/gitea/docker-compose.yml
+        owner: gitea
+        group: gitea
+        mode: '0644'
+        content: |
+          version: "2"
 
-        networks:
-          gitea:
-            external: false
+          networks:
+            gitea:
+              external: false
 
-        services:
-          server:
-            image: gitea/gitea:latest
-            environment:
-              - USER_UID=1000
-              - USER_GID=1000
-              - APP_NAME='Gitea Ansible & Pizza'
-              - ROOT_URL= "http://{{ ansible_eth1.ipv4.address }}"
-              - RUN_MODE=prod
-              - DB_TYPE=postgres
-              - DB_HOST=db:5432
-              - DB_NAME=gitea
-              - DB_USER=gitea
-              - DB_PASSWD=gitea
-            restart: always
-            networks:
-              - gitea
-            volumes:
-              - /srv/gitea/data:/data
-              - /etc/timezone:/etc/timezone:ro
-              - /etc/localtime:/etc/localtime:ro
-            ports:
-              - "80:3000"
-              - "222:22"
-            depends_on:
-              - db
+          services:
+            server:
+              image: gitea/gitea:latest
+              environment:
+                - USER_UID=1000
+                - USER_GID=1000
+                - APP_NAME='Gitea Ansible & Pizza'
+                - ROOT_URL= "http://{{ ansible_eth1.ipv4.address }}"
+                - RUN_MODE=prod
+                - DB_TYPE=postgres
+                - DB_HOST=db:5432
+                - DB_NAME=gitea
+                - DB_USER=gitea
+                - DB_PASSWD=gitea
+              restart: always
+              networks:
+                - gitea
+              volumes:
+                - /srv/gitea/data:/data
+                - /etc/timezone:/etc/timezone:ro
+                - /etc/localtime:/etc/localtime:ro
+              ports:
+                - "80:3000"
+                - "222:22"
+              depends_on:
+                - db
 
-          db:
-            image: postgres:9.6
-            restart: always
-            environment:
-              - POSTGRES_USER=gitea
-              - POSTGRES_PASSWORD=gitea
-              - POSTGRES_DB=gitea
-            networks:
-              - gitea
-            volumes:
-              - /srv/gitea/postgres:/var/lib/postgresql/data
+            db:
+              image: postgres:9.6
+              restart: always
+              environment:
+                - POSTGRES_USER=gitea
+                - POSTGRES_PASSWORD=gitea
+                - POSTGRES_DB=gitea
+              networks:
+                - gitea
+              volumes:
+                - /srv/gitea/postgres:/var/lib/postgresql/data
 
-  - name: Tear down existing compose services
-    docker_compose:
-      project_src: /srv/gitea
-      state: absent
+    - name: Tear down existing compose services
+      docker_compose:
+        project_src: /srv/gitea
+        state: absent
 
-  - name: Create and start compose services
-    docker_compose:
-      project_src: /srv/gitea
-    register: output
+    - name: Create and start compose services
+      docker_compose:
+        project_src: /srv/gitea

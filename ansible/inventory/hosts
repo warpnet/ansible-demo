@@ -1,0 +1,4 @@
+localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
+
+[webservers]
+192.168.50.12

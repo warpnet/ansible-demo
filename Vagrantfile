@@ -20,7 +20,7 @@ Vagrant.configure('2') do |config|
         machine.vm.network "private_network", ip: "192.168.50.10"
 
         machine.vm.provider "virtualbox" do |vb|
-            vb.memory = 2048
+            vb.memory = 1024
             vb.cpus = 2
         end
 
@@ -42,6 +42,11 @@ Vagrant.configure('2') do |config|
     config.vm.define :node2 do |machine|
         machine.vm.host_name = "node2.local"
         machine.vm.network "private_network", ip: "192.168.50.13"
+    end
+
+    config.vm.define :node3 do |machine|
+      machine.vm.host_name = "node3.local"
+      machine.vm.network "private_network", ip: "192.168.50.14"
     end
 
     config.vm.define :awx, autostart: false do |machine|
