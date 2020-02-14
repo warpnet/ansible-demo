@@ -12,13 +12,14 @@ This setup has been tested on Ubuntu 18.04 LTS and MacOS Catalina. The following
 ### Libvirt instead of VirtualBox
 
 It is also possible to use Libvirt/Qemu instead of VirtualBox. This requires:
-- vagrant
+- vagrant 2.0.2 or higher (FROM YOUR UBUNTU REPOSITORIES)
+- vagrant-libvirt (FROM YOUR UBUNTU REPOSITORIES)
 - libvirt
 
 Install Vagrant:
 
 ```bash
-apt install -y vagrant
+apt install -y vagrant vagrant-libvirt
 ```
 
 Then, use `Vagrantfile-libvirt` instead of `Vagrantfile`:
@@ -27,6 +28,8 @@ Then, use `Vagrantfile-libvirt` instead of `Vagrantfile`:
 mv Vagrantfile Vagrantfile-virtualbox
 cp Vagrantfile-libvirt Vagrantfile
 ```
+
+This has been tested on Ubuntu 18.04 LTS
 
 ## How to use
 After you installed the prerequisites you can start using the environment by following the steps underneath. If you want to jump straight into AWX click [here](#AWX).
