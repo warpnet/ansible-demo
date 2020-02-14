@@ -9,6 +9,25 @@ This setup has been tested on Ubuntu 18.04 LTS and MacOS Catalina. The following
 - virtualbox 6.0 (virtualbox 6.1 is currently not supported by Vagrant)
 - virtualbox extension pack (https://download.virtualbox.org/virtualbox/6.0.14/Oracle_VM_VirtualBox_Extension_Pack-6.0.14.vbox-extpack)
 
+### Libvirt instead of VirtualBox
+
+It is also possible to use Libvirt/Qemu instead of VirtualBox. This requires:
+- vagrant
+- libvirt
+
+Install Vagrant:
+
+```bash
+apt install -y vagrant
+```
+
+Then, use `Vagrantfile-libvirt` instead of `Vagrantfile`:
+
+```bash
+mv Vagrantfile Vagrantfile-virtualbox
+cp Vagrantfile-libvirt Vagrantfile
+```
+
 ## How to use
 After you installed the prerequisites you can start using the environment by following the steps underneath. If you want to jump straight into AWX click [here](#AWX).
 
