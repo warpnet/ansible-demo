@@ -70,4 +70,22 @@ Vagrant.configure('2') do |config|
         # install awx using the provided playbook
         machine.vm.provision "shell", path: "provision/install_awx.sh", privileged: false, preserve_order: true
     end
+
+    config.vm.define :gitea, autostart: false do |machine|
+        machine.vm.host_name = "gitea.local"
+        machine.vm.network "private_network", ip: "192.168.50.15"
+
+        machine.vm.provider "virtualbox" do |vb|
+            vb.memory = 2048
+            vb.cpus = 1
+        end
+   
+        # install ansible and setup prerequisites for AWX
+        machine.vm.provision "ansible_local", preserve_order: true do |ansible|
+            ansible.playbook = "provision/install_gitea.yml"
+            ansible.install_mode = :pip
+            ansible.pip_install_cmd = "sudo yum install python3 python3-pip -y; sudo ln -s /usr/bin/pip3 /usr/bin/pip"
+            ansible.compatibility_mode = "2.0"
+        end
+    end
 end
