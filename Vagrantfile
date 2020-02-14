@@ -33,18 +33,18 @@ Vagrant.configure('2') do |config|
         machine.vm.provision "file", source: "~/.vagrant.d/insecure_private_key", destination: "$HOME/.ssh/id_rsa"
     end
 
-    config.vm.define :node1 do |machine|
-        machine.vm.host_name = "node1.local"
+    config.vm.define :web1 do |machine|
+        machine.vm.host_name = "web1.local"
         machine.vm.network "private_network", ip: "192.168.50.12"
     end
 
-    config.vm.define :node2 do |machine|
-        machine.vm.host_name = "node2.local"
+    config.vm.define :web2 do |machine|
+        machine.vm.host_name = "web2.local"
         machine.vm.network "private_network", ip: "192.168.50.13"
     end
 
-    config.vm.define :node3 do |machine|
-      machine.vm.host_name = "node3.local"
+    config.vm.define :lb do |machine|
+      machine.vm.host_name = "lb.local"
       machine.vm.network "private_network", ip: "192.168.50.14"
     end
 

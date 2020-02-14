@@ -5,9 +5,9 @@ This setup can be used to develop Ansible playbooks and AWX or can be used for w
 
 ## Prerequisites
 This setup has been tested on Ubuntu 18.04 LTS and MacOS Catalina. The following prerequisites are needed:
-- Vagrant 2.2.6
-- virtualbox 6.0 (virtualbox 6.1 is currently not supported by Vagrant)
-- virtualbox extension pack (https://download.virtualbox.org/virtualbox/6.0.14/Oracle_VM_VirtualBox_Extension_Pack-6.0.14.vbox-extpack)
+- Vagrant 2.2.6 or higher
+- virtualbox 5.0 or higher
+- virtualbox extension pack
 
 ### Libvirt instead of VirtualBox
 
@@ -129,9 +129,9 @@ Vagrant name | Hostname | IP Address
 --- | --- | ---
 ansible | ansible.local | 192.168.50.10
 awx | awx.local | 192.168.50.11
-node1 | node1.local | 192.168.50.12
-node2 | node2.local | 192.168.50.13
-node3 | node3.local | 192.168.50.14
+web1 | web1.local | 192.168.50.12
+web2 | web2.local | 192.168.50.13
+lb | lb.local | 192.168.50.14
 gitea | gitea.local | 192.168.50.15
 
 ### Vagrant SSH
@@ -142,9 +142,9 @@ user@laptop:~/ansible-demo$ vagrant status
 Current machine states:
 
 ansible                   running (virtualbox)
-node1                     running (virtualbox)
-node2                     running (virtualbox)
-node3                     running (virtualbox)
+web1                      running (virtualbox)
+web2                      running (virtualbox)
+lb                        running (virtualbox)
 awx                       not created (virtualbox)
 
 This environment represents multiple VMs. The VMs are all listed
@@ -173,8 +173,9 @@ vagrant ssh gitea
 To ssh into one of the nodes:
 
 ```bash
-vagrant ssh node1
-vagrant ssh node2
+vagrant ssh web1
+vagrant ssh web2
+vagrant ssh lb
 ```
 
 ### Destroying the environment
