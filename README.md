@@ -146,6 +146,7 @@ web1                      running (virtualbox)
 web2                      running (virtualbox)
 lb                        running (virtualbox)
 awx                       not created (virtualbox)
+gitea                     not created (virtualbox)
 
 This environment represents multiple VMs. The VMs are all listed
 above with their current state. For more information about a specific
