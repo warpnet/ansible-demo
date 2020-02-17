@@ -1,7 +1,9 @@
 # Vagrant Demo
 This Vagrant setup installs 3 CentOS 7 machines, 1 ansible controller and 2 nodes that can be managed by Ansible. Also this Vagrant setup provides a development AWX machine, so you can test and develop environments using Anisible AWX. 
 
-This setup can be used to develop Ansible playbooks and AWX or can be used for workshops and other educational purposes.
+This setup can be used to develop Ansible playbooks and AWX or can be used for workshops and other educational purposes. 
+
+For a tutorial of Ansible AWX click [here](README-AWX.md)!
 
 ## Prerequisites
 This setup has been tested on Ubuntu 18.04 LTS and MacOS Catalina. The following prerequisites are needed:
@@ -85,6 +87,8 @@ To SSH into the machine:
 ```bash
 vagrant ssh awx
 ```
+
+A tutorial of Ansible AWX can be found [here](README-AWX.md)!
 
 ## Gitea
 AWX requires to sync projects using git. If you don't want to use Github or have access to a Git server, you can use the gitea instance included in this Vagrantfile. The installation of this box requires at least 2GB of free memory. Installation will take around 5 minutes depending on your internet connection.
