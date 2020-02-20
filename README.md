@@ -50,7 +50,7 @@ In order to execute your newly developed playbook, you need to ssh into the vagr
 user@laptop:~/ansible-demo$ vagrant ssh ansible
 
 [vagrant@ansible ~]$ cd ansible
-[vagrant@ansible ~]$ ansible-playbook my_first_playbook.yml
+[vagrant@ansible ~]$ ansible-playbook install_webservers.yml
 ```
 
 | NOTE: All Vagrant commands need to be executed from the root of the ansible-demo directory, where the `Vagrantfile` is. |
